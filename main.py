@@ -64,21 +64,21 @@ def collect_and_store_route_data(
 
 
 def main():
-
-    HOME_ID = 'ChIJYcUBb5Uf0oUR3yCLWrs9jSM'
-    GTBC_ID = 'ChIJsyuN_YAD0oUR_m4u3bj6SvQ'
-    #PERI_SUR_ID = 'ChIJBeT2ewD_zYURkEcbmfayHZ4'
+    
 
     # Initialize Container
     container = Container()
+
+    # Resolve Settings
+    settings = container.settings()
 
     # Resolve collect_traffic_use_case
     use_case = container.collect_traffic_use_case()
 
     collect_and_store_route_data(
         use_case=use_case,
-        origin=HOME_ID,
-        destination=GTBC_ID
+        origin=settings.COORD1,
+        destination=settings.COORD2
     )
 
 

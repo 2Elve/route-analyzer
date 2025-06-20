@@ -18,7 +18,6 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
         destination: str
     ) -> List[Route]:
 
-
         response = self.client.get_directions(origin, destination)
 
         # ToDo: Raise no response exception
@@ -26,7 +25,7 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
         routes = []
 
         for i, route in enumerate(response.get('routes', [])):
-            leg = route['legs'][i]
+            leg = route['legs'][0]
 
             route_type = RouteType.PRIMARY if i == 0 else RouteType.ALTERNATIVE
 
