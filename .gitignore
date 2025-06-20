@@ -1,0 +1,94 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Configurations
+config/
+
+# SQLite databases
+*.db
+*.sqlite
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Virtual environment
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependency directories
+pip-wheel-metadata/
+.python-version
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+coverage.xml
+
+# Documentation
+docs/_build/
+_build/
+
+# PyInstaller
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Log files
+*.log
+logs/
+
+# Development configuration files
+settings.ini
+config.ini
+config_local.py
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Project specific ignores
+/traffic_data.db  # Excluye tu base de datos SQLite principal
+/test_data.db     # Excluye bases de datos de prueba
+
+# API keys and sensitive data
+*.key
+*.pem
+*.secret
+credentials.json
+secrets.ini
+.env.local
