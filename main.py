@@ -5,8 +5,8 @@ from config.settings import Settings
 
 from infrastructure.database.repositories import SQLiteTrafficRepository
 from infrastructure.external.google_client import GoogleMapsClient
+from infrastructure.scheduler import BackgroundScheduler
 
-from interfaces.gateways.traffic_gateway import ITrafficDataGateway
 from interfaces.adapters.google_maps import GoogleMapsTrafficAdapter
 
 from use_cases.data_collection.collect_traffic_data import CollectTrafficDataUseCase
@@ -17,6 +17,7 @@ class Container(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     settings = providers.Singleton(Settings)
+    scheduler = providers.Singleton(BackgroundScheduler)
 
     # Clients
     google_client = providers.Factory(
@@ -45,13 +46,14 @@ class Container(containers.DeclarativeContainer):
 
 def collect_and_store_route_data(
     use_case: CollectTrafficDataUseCase, 
-    origin: str, destination: str
+    origin: str, 
+    destination: str
 ) -> bool:
 
     print(f"🔍 Collecting Route Data: {origin} → {destination}")
     
     try:
-        success = use_case.execute(origin, destination)
+        success = use_case.execute(origin, destination, round_trip=True)
         
         if success:
             print("✅ Data saved succesfully")
@@ -64,24 +66,23 @@ def collect_and_store_route_data(
 
 
 def main():
-    
-
     # Initialize Container
     container = Container()
 
-    # Resolve Settings
+    # Resolve Dependencies
     settings = container.settings()
+    scheduler = container.scheduler()
 
     # Resolve collect_traffic_use_case
     use_case = container.collect_traffic_use_case()
 
-    collect_and_store_route_data(
+    # Set Up Scheduler
+    scheduler.schedule_hourly_job(
+        collect_and_store_route_data,
         use_case=use_case,
         origin=settings.COORD1,
         destination=settings.COORD2
     )
-
-
 
 
 
