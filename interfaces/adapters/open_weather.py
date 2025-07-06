@@ -29,7 +29,7 @@ class WeatherAdapter(IWeatherDataGateway):
             visibility = response['visibility'],
             wind_speed = response['wind']['speed'],
             humidity = response['main']['humidity'],
-            timestamp = datetime.now()
+            timestamp = datetime.now().replace(second=0, microsecond=0)
         )
 
         return weather

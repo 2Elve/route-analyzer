@@ -38,7 +38,7 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
                     duration_seconds = float(leg['duration'].replace('s', '')),
                     static_duration_seconds = float(leg['staticDuration'].replace('s', '')),
                     encoded_polyline = leg["polyline"]["encodedPolyline"],
-                    timestamp = datetime.now()
+                    timestamp = datetime.now().replace(second=0, microsecond=0)
                 )
             )
 

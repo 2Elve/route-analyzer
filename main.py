@@ -136,7 +136,7 @@ def main():
         latitude=settings.LATITUDE
     )
 
-    # Runn script indefinitely 
+    # Run script indefinitely 
     try:
         while True:
             time.sleep(1)

@@ -25,9 +25,7 @@ class BackgroundScheduler:
     def _run_scheduler(self):
         """ Execute scheduler on background """
         
-        print("Scheduler initiated")
         while True:
-            print("Executing pending jobs...") 
             schedule.run_pending()
             time.sleep(1)
 
