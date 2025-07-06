@@ -1,6 +1,6 @@
 import sqlite3
-from domains.entities import Route
-from domains.repositories import ITrafficRepository
+from domains.entities import Route, WeatherConditions
+from domains.repositories import ITrafficRepository, IWeatherRepository
 
 
 class SQLiteTrafficRepository(ITrafficRepository):
@@ -31,7 +31,6 @@ class SQLiteTrafficRepository(ITrafficRepository):
             conn.commit()
     
     def save_route(self, route: Route) -> bool:
-        
 
         with self._get_connection() as conn:
             try:
@@ -56,3 +55,63 @@ class SQLiteTrafficRepository(ITrafficRepository):
             except Exception as e:
                 print(f"Error saving route: {e}")
             return False
+        
+
+class SQLiteWeatherRepository(IWeatherRepository):
+    def __init__(self, db_path: str = "traffic_data.db"):
+        self.db_path = db_path
+        self._create_table()
+
+    def _get_connection(self):
+        return sqlite3.connect(self.db_path)
+    
+    def _create_table(self):
+
+        with self._get_connection() as conn:
+            conn.execute("""
+            CREATE TABLE IF NOT EXISTS weather_conditions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                weather_type TEXT NOT NULL,
+                weather_description TEXT NOT NULL,
+                temperature REAL NOT NULL,
+                feels_like REAL NOT NULL,
+                pressure REAL NOT NULL,
+                visibility INTEGER NOT NULL,
+                wind_speed REAL NOT NULL,
+                humidity REAL NOT NULL,
+                timestamp TEXT NOT NULL,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+            """)
+            conn.commit()
+
+    def save_weather(self, weather: WeatherConditions) -> bool:
+        with self._get_connection() as conn:
+            try:
+                conn.execute("""
+                INSERT INTO weather_conditions (
+                    weather_type, weather_description,
+                    temperature, feels_like,
+                    pressure, visibility,
+                    wind_speed, humidity,
+                    timestamp
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    weather.weather_type,
+                    weather.weather_description,
+                    weather.temperature,
+                    weather.feels_like,
+                    weather.pressure,
+                    weather.visibility,
+                    weather.wind_speed,
+                    weather.humidity,
+                    weather.timestamp.isoformat()
+                ))
+                conn.commit()
+                return True
+            except sqlite3.Error as e:
+                print(f"Error saving weather data: {e}")
+                return False
+
+
+

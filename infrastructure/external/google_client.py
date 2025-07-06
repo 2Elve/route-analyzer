@@ -19,7 +19,6 @@ class GoogleMapsClient:
             }
 
             # Request information 2 minutes ahead of current time
-            # For some reason the api fails to respond if you query the current time
             _departure_time = (datetime.now(timezone.utc) + timedelta(minutes=2)).isoformat()
 
             data = {

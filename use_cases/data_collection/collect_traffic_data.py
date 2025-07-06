@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from interfaces.gateways.traffic_gateway import ITrafficDataGateway
 from domains.repositories import ITrafficRepository
 from typing import List, Tuple
