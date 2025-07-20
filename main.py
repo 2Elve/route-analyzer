@@ -4,7 +4,11 @@ from dependency_injector import containers, providers
 
 from config.settings import Settings
 
-from infrastructure.database.repositories import PostgresTrafficRepository, PostgresWeatherRepository
+from infrastructure.database.repositories import (
+    PostgresTrafficRepository, PostgresWeatherRepository,
+    SQLiteTrafficRepository, SQLiteWeatherRepository
+)
+
 from infrastructure.external.google_client import GoogleMapsClient
 from infrastructure.external.weather_client import WeatherClient
 from infrastructure.scheduler import BackgroundScheduler
@@ -45,7 +49,7 @@ class Container(containers.DeclarativeContainer):
         weather_client=weather_client
     )
 
-    # Repositories
+    # Repositories - Production
     traffic_repository = providers.Singleton(
         PostgresTrafficRepository,
         db_config=settings.provided.db_config
@@ -55,6 +59,17 @@ class Container(containers.DeclarativeContainer):
         PostgresWeatherRepository,
         db_config=settings.provided.db_config
     )
+
+    # # Repositories - Development
+    # traffic_repository = providers.Singleton(
+    #     SQLiteTrafficRepository,
+    #     db_path="traffic_data.db"
+    # )
+
+    # weather_repository = providers.Singleton(
+    #     SQLiteWeatherRepository,
+    #     db_path="traffic_data.db"
+    # )
 
     # Use Cases
     collect_traffic_use_case = providers.Factory(

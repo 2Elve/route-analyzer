@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import List
+import pytz
 
 from infrastructure.external.google_client import GoogleMapsClient
 
@@ -11,6 +12,7 @@ from domains.entities import Route, RouteType
 class GoogleMapsTrafficAdapter(ITrafficDataGateway):
     def __init__(self, google_client: GoogleMapsClient):
         self.client = google_client
+        self.cdmx_tz = pytz.timezone('America/Mexico_City')
     
     def get_route_data(
         self, 
@@ -20,7 +22,8 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
 
         response = self.client.get_directions(origin, destination)
 
-        # ToDo: Raise no response exception
+        # Obtain current cdmx time
+        cdmx_time = datetime.now(self.cdmx_tz).replace(second=0, microsecond=0)
 
         routes = []
 
@@ -38,7 +41,7 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
                     duration_seconds = float(leg['duration'].replace('s', '')),
                     static_duration_seconds = float(leg['staticDuration'].replace('s', '')),
                     encoded_polyline = leg["polyline"]["encodedPolyline"],
-                    timestamp = datetime.now().replace(second=0, microsecond=0)
+                    timestamp = cdmx_time
                 )
             )
 
