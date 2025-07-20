@@ -4,6 +4,7 @@ dependency-injector==4.47.1
 idna==3.10
 psycopg2==2.9.10
 psycopg2-binary==2.9.10
+pytz==2025.2
 requests==2.32.4
 schedule==1.2.2
 typing_extensions==4.14.0
