@@ -15,7 +15,7 @@ class BackgroundScheduler:
     ):
         """ This function executes the program each hour """
 
-        job = schedule.every().minute.do(lambda: job_func(*args, **kwargs))
+        job = schedule.every().hour.do(lambda: job_func(*args, **kwargs))
         self.scheduled_jobs.append(job)
         
         if len(self.scheduled_jobs) == 1:

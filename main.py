@@ -4,7 +4,7 @@ from dependency_injector import containers, providers
 
 from config.settings import Settings
 
-from infrastructure.database.repositories import SQLiteTrafficRepository, SQLiteWeatherRepository
+from infrastructure.database.repositories import PostgresTrafficRepository, PostgresWeatherRepository
 from infrastructure.external.google_client import GoogleMapsClient
 from infrastructure.external.weather_client import WeatherClient
 from infrastructure.scheduler import BackgroundScheduler
@@ -47,13 +47,13 @@ class Container(containers.DeclarativeContainer):
 
     # Repositories
     traffic_repository = providers.Singleton(
-        SQLiteTrafficRepository,
-        db_path="traffic_data.db"
+        PostgresTrafficRepository,
+        db_config=settings.provided.db_config
     )
 
     weather_repository = providers.Singleton(
-        SQLiteWeatherRepository,
-        db_path="traffic_data.db"
+        PostgresWeatherRepository,
+        db_config=settings.provided.db_config
     )
 
     # Use Cases
@@ -68,6 +68,7 @@ class Container(containers.DeclarativeContainer):
         weather_gateway=weather_gateway,
         weather_repo=weather_repository
     )
+
 
 def collect_and_store_route_data(
     use_case: CollectTrafficDataUseCase, 
@@ -107,7 +108,6 @@ def collect_and_store_weather_data(
         return False
 
 
-
 def main():
     # Initialize Container
     container = Container()
@@ -142,9 +142,6 @@ def main():
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nStoping Program...")
-
-
-
 
 
 if __name__ == "__main__":
