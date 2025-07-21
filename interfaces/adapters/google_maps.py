@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 import pytz
 
@@ -24,6 +24,7 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
 
         # Obtain current cdmx time
         cdmx_time = datetime.now(self.cdmx_tz).replace(second=0, microsecond=0)
+        utc_time = cdmx_time.astimezone(timezone.utc)
 
         routes = []
 
@@ -41,7 +42,7 @@ class GoogleMapsTrafficAdapter(ITrafficDataGateway):
                     duration_seconds = float(leg['duration'].replace('s', '')),
                     static_duration_seconds = float(leg['staticDuration'].replace('s', '')),
                     encoded_polyline = leg["polyline"]["encodedPolyline"],
-                    timestamp = cdmx_time
+                    timestamp = utc_time
                 )
             )
 

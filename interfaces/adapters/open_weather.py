@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 import pytz
 
@@ -24,6 +24,9 @@ class WeatherAdapter(IWeatherDataGateway):
 
         # Obtain current cdmx time
         cdmx_time = datetime.now(self.cdmx_tz).replace(second=0, microsecond=0)
+        utc_time = cdmx_time.astimezone(timezone.utc)
+
+        import pdb;pdb.set_trace()
 
         weather = WeatherConditions(
             weather_type = response['weather'][0]['main'],
@@ -34,7 +37,7 @@ class WeatherAdapter(IWeatherDataGateway):
             visibility = response['visibility'],
             wind_speed = response['wind']['speed'],
             humidity = response['main']['humidity'],
-            timestamp = cdmx_time
+            timestamp = utc_time
         )
 
         return weather

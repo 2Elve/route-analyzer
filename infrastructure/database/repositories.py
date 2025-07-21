@@ -1,5 +1,6 @@
 import sqlite3
 import psycopg2
+from datetime import datetime, timezone
 from psycopg2 import sql
 from domains.entities import Route, WeatherConditions
 from domains.repositories import ITrafficRepository, IWeatherRepository
@@ -151,6 +152,9 @@ class PostgresTrafficRepository(ITrafficRepository):
     
     def save_route(self, route: Route) -> bool:
 
+        
+        utc_time = route.timestamp.astimezone(timezone.utc)
+
         with self._get_connection() as conn:
             try:
                 with conn.cursor() as cursor:
@@ -168,7 +172,7 @@ class PostgresTrafficRepository(ITrafficRepository):
                         route.duration_seconds,
                         route.static_duration_seconds,
                         route.encoded_polyline,
-                        route.timestamp.isoformat()
+                        utc_time.isoformat()
                     ))
                     conn.commit()
                     return True
@@ -215,6 +219,8 @@ class PostgresWeatherRepository(IWeatherRepository):
     
     def save_weather(self, weather: WeatherConditions, location: str = None) -> bool:
 
+        utc_time = weather.timestamp.astimezone(timezone.utc)
+
         with self._get_connection() as conn:
             try:
                 with conn.cursor() as cursor:
@@ -235,7 +241,7 @@ class PostgresWeatherRepository(IWeatherRepository):
                         weather.visibility,
                         weather.wind_speed,
                         weather.humidity,
-                        weather.timestamp.isoformat(),
+                        utc_time.isoformat(),
                         location
                     ))
                     conn.commit()
